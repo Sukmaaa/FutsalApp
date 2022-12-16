@@ -1,34 +1,67 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+// Pages
+
+import HomeScreen from "./src/pages/HomeScreen";
+import HistoryScreen from "./src/pages/HistoryScreen";
+import ProfileScreen from "./src/pages/ProfileScreen";
+
+const HomeStack = createNativeStackNavigator();
+const HistoryStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeScreen() {
+
+function HomeStackScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
-    </View>
+    <HomeStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#013e23',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+    </HomeStack.Navigator>
   );
 }
 
-function SettingsScreen() {
+function HistoryStackScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>History</Text>
-    </View>
+    <HistoryStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#013e23',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <HistoryStack.Screen name="Settings" component={HistoryScreen} />
+    </HistoryStack.Navigator>
   );
 }
-
-function ProfileScreen() {
+function ProfileStackScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Profile</Text>
-    </View>
+    <ProfileStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#013e23',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <ProfileStack.Screen name="Profiles" component={ProfileScreen} />
+    </ProfileStack.Navigator>
   );
 }
 
@@ -40,7 +73,7 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
+            if (route.name === "Main") {
               iconName = focused ? "ios-home" : "ios-home-outline";
             } else if (route.name === "History") {
               iconName = focused ? "ios-list" : "ios-list-outline";
@@ -51,13 +84,17 @@ export default function App() {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "#013e23",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: "#fff",
+          tabBarInactiveTintColor: "#BDDFCA",
+          tabBarStyle: {
+            backgroundColor: '#013e23',
+          },
+          headerShown: false
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="History" component={SettingsScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Main" component={HomeStackScreen} />
+        <Tab.Screen name="History" component={HistoryStackScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
