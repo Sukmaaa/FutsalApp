@@ -1,10 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 
-const ProfileScreen = () => {
+import Button from '../components/Button'
+
+const ProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text>ProfileScreen</Text>
+      <Button mode="contained" onPress={() => navigation.navigate('StartScreen')}>
+        Logout
+      </Button>
     </View>
   )
 }
