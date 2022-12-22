@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { TouchableOpacity, StyleSheet, View, Alert } from 'react-native'
 import { Text } from 'react-native-paper'
+import { API, setAuthToken } from "../config/API";
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -10,21 +11,17 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
-import { UserContext } from '../context/userContext'
 import DataValue from '../dummy/dataDummy'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loader from 'react-native-modal-loader'
 
 export default function LoginScreen({ navigation }) {
-  let dataUser = DataValue.users.data
 
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [isLoading, setIsloading] = useState(false)
 
-  const { state, dispatch } = useContext(UserContext);
-
-  const onLoginPressed = () => {
+  const onLoginPressed = async () => {
     setIsloading(true)
     const emailError = emailValidator(email.value)
     const passwordError = passwordValidator(password.value)
@@ -34,45 +31,26 @@ export default function LoginScreen({ navigation }) {
       return
     }
 
-    const authUser = dataUser.filter((user) => {
-      return (
-        user.email === email.value && 
-        user.password === password.value
-      )
-    })
-
-    if(authUser.length > 0){
-      AsyncStorage.setItem("user", JSON.stringify({
-        id: authUser[0].id,
-        role: authUser[0].role,
-        fullname: authUser[0].fullname,
-        email: authUser[0].email,
-        password: authUser[0].password
-      }))
-
-      dispatch({
-        type: "LOGIN",
-        payload: {
-          user: {
-            id: authUser[0].id,
-            role: authUser[0].role,
-            fullname: authUser[0].fullname,
-            email: authUser[0].email,
-            password: authUser[0].password
-          },
-        },
+    try {
+      const body = JSON.stringify({ 
+        email: email.value, 
+        password: password.value
       });
-
+  
+      const response = await API.post('/login', body);
+      setAuthToken(response.data.data.token);
+      AsyncStorage.setItem("user", response.data.data)
+      console.warn(response.data.data)
       setIsloading(false)
-      if(authUser[0].role === "admin"){
-        navigation.navigate("Dashboard")
-      } else {
+
+      if(response.data.data.email == "admin@gmail.com"){
+        navigation.navigate('Admin')
+      }else {
         navigation.navigate('Dashboard')
       }
-      
-    }else {
+    } catch (error) {
+      console.log(error)
       setIsloading(false)
-      Alert.alert("Login Authentication", "Password atau Username Salah")
     }
   }
 

@@ -12,13 +12,17 @@ import { UserContextProvider } from "./src/context/userContext";
 // Screens
 
 import {
+  AuthScreen,
   StartScreen,
   LoginScreen,
   RegisterScreen,
   ResetPasswordScreen,
   HomeScreen,
   HistoryScreen,
-  ProfileScreen
+  DetailScreen,
+  BookingScreen,
+  ProfileScreen,
+  AdminScreen
 } from './src/screens'
 
 const LoginStack = createNativeStackNavigator();
@@ -74,6 +78,8 @@ function HomeStackScreen() {
       },
     }}>
       <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="DetailLapangan" component={DetailScreen} />
+      <HomeStack.Screen name="Booking" component={BookingScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -115,7 +121,7 @@ export default function App() {
       <UserContextProvider>
         <NavigationContainer>
           <LoginStack.Navigator
-            initialRouteName="StartScreen"
+            initialRouteName="AuthLoading"
             screenOptions={{
               headerShown: false,
             }}
@@ -124,6 +130,8 @@ export default function App() {
             <LoginStack.Screen name="LoginScreen" component={LoginScreen} />
             <LoginStack.Screen name="RegisterScreen" component={RegisterScreen} />
             <LoginStack.Screen name="Dashboard" component={TabStackScreen} />
+            <LoginStack.Screen name="AuthLoading" component={AuthScreen} />
+            <LoginStack.Screen name="Admin" component={AdminScreen} />
             <LoginStack.Screen
               name="ResetPasswordScreen"
               component={ResetPasswordScreen}
